@@ -1,1 +1,1 @@
-module.exports = require('./lib/iterator');
+module.exports = require('./lib/synchronasty');

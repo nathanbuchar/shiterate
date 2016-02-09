@@ -1,4 +1,4 @@
-Synchronasty
+Synchronasty [![Build Status](https://travis-ci.org/nathanbuchar/synchronasty.svg?branch=master)](https://travis-ci.org/nathanbuchar/synchronasty)
 ============
 
 One step at a time.
@@ -34,7 +34,7 @@ iterate(['foo', 'bar', 'baz'], (i, item, next) => {
 });
 ```
 
-If you're familiar with the Node JS server framework [Hapi][external_url_hapi], you'll realize this is similar to how the `register()` method works when defining a plugin.
+If you're familiar with the Node JS server framework [Hapi][external_link_hapi], you'll realize this is similar to how the `register()` method works when defining a plugin.
 
 Still curious? Check out the rest of the [examples][section_examples].
 
@@ -232,6 +232,21 @@ iterate([0, 1, 2], (i, item, next) => {
 
 
 
+***
+
+
+
+Authors
+-------
+* [Nathan Buchar]
+
+
+License
+-------
+MIT
+
+
+
 
 
 
@@ -239,5 +254,9 @@ iterate([0, 1, 2], (i, item, next) => {
 [section_quickStart]: #quick-start
 [section_usage]: #usage
 [section_examples]: #examples
+[section_authors]: #authors
+[section_license]: #license
 
-[external_url_hapi]: http://hapijs.com
+[external_link_hapi]: http://hapijs.com
+
+[Nathan Buchar]: mailto:hello@nathanbuchar.com
