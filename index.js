@@ -1,1 +1,1 @@
-module.exports = require('./lib/synchronasty');
+module.exports = require('./lib/shiterate');

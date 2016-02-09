@@ -1,5 +1,5 @@
 /**
- * @fileoverview Mocha test specs.
+ * @fileoverview Mocha test specs for Shiterate.
  * @author Nathan Buchar
  */
 
@@ -9,7 +9,7 @@
 
 const chai = require('chai');
 
-const iterate = require('../').iterate;
+const shiterate = require('../');
 
 /**
  * Chai assertion shorthands.
@@ -17,13 +17,13 @@ const iterate = require('../').iterate;
 let expect = chai.expect;
 let should = chai.should();
 
-describe('iterate', () => {
+describe('shiterate', () => {
 
   describe('inteface', () => {
 
     it('should not throw if "done" is not defined', () => {
       try {
-        iterate([0, 1, 2], (i, item, next) => {
+        shiterate([0, 1, 2], (i, item, next) => {
           return next();
         });
       } catch (err) {
@@ -33,7 +33,7 @@ describe('iterate', () => {
 
     it('should not throw if "items" is empty', done => {
       try {
-        iterate([], (i, item, next) => {
+        shiterate([], (i, item, next) => {
           return next();
         }, items => {
           should.exist(items);
@@ -47,7 +47,7 @@ describe('iterate', () => {
 
     it('should throw if "items" is not an array', () => {
       try {
-        iterate('not an array', (i, item, next) => {
+        shiterate('not an array', (i, item, next) => {
           return next();
         });
       } catch (err) {
@@ -59,7 +59,7 @@ describe('iterate', () => {
 
     it('should throw if "fn" is not a function', () => {
       try {
-        iterate([0, 1, 2], 'not a function');
+        shiterate([0, 1, 2], 'not a function');
       } catch (err) {
         should.exist(err);
 
@@ -69,7 +69,7 @@ describe('iterate', () => {
 
     it('should throw if "done" exists and is not a function', () => {
       try {
-        iterate([0, 1, 2], (i, item, next) => {
+        shiterate([0, 1, 2], (i, item, next) => {
           return next();
         }, 'not a function');
       } catch (err) {
@@ -85,7 +85,7 @@ describe('iterate', () => {
     it('should step to the next iteration', done => {
       let step = 0;
 
-      iterate([0, 1, 2], (i, item, next) => {
+      shiterate([0, 1, 2], (i, item, next) => {
         step++;
         return next();
       }, () => {
@@ -97,7 +97,7 @@ describe('iterate', () => {
     it('should wait for "next" before stepping to the next iteration', done => {
       let step = 0;
 
-      iterate([0, 1, 2], (i, item, next) => {
+      shiterate([0, 1, 2], (i, item, next) => {
         step++;
 
         setTimeout(() => {
@@ -112,7 +112,7 @@ describe('iterate', () => {
     it('should update the value of the current item', done => {
       let arr = [0, 1, 2];
 
-      iterate(arr, (i, item, next) => {
+      shiterate(arr, (i, item, next) => {
         return next(item + 1);
       }, items => {
         should.exist(items);
@@ -128,7 +128,7 @@ describe('iterate', () => {
     it('should not update the values of the orginal array', done => {
       let arr = [0, 1, 2];
 
-      iterate(arr, (i, item, next) => {
+      shiterate(arr, (i, item, next) => {
         return next(item + 1);
       }, items => {
         should.exist(items);
@@ -145,7 +145,7 @@ describe('iterate', () => {
       let step = 0;
       let count = 0;
 
-      iterate([0, 1, 2], (i, item, next) => {
+      shiterate([0, 1, 2], (i, item, next) => {
         step++;
 
         setTimeout(() => {
@@ -171,7 +171,7 @@ describe('iterate', () => {
       let step = 0;
       let count = 0;
 
-      iterate([0, 1, 2], (i, item, next) => {
+      shiterate([0, 1, 2], (i, item, next) => {
         step++;
 
         // Note that "next" is not returned.
@@ -198,7 +198,7 @@ describe('iterate', () => {
   describe('abort', () => {
 
     it('should immediately abort the iteration when called', done => {
-      iterate([0, 1, 2], (i, item, next) => {
+      shiterate([0, 1, 2], (i, item, next) => {
         expect(i).to.not.equal(1);
         expect(i).to.not.equal(2);
 
@@ -209,7 +209,7 @@ describe('iterate', () => {
     });
 
     it('should not iterate if "next" is called after "abort"', done => {
-      iterate([0, 1, 2], (i, item, next) => {
+      shiterate([0, 1, 2], (i, item, next) => {
         expect(i).to.not.equal(1);
         expect(i).to.not.equal(2);
 
@@ -222,7 +222,7 @@ describe('iterate', () => {
     });
 
     it('should update the value of the current item', done => {
-      iterate([0, 1, 2], (i, item, next) => {
+      shiterate([0, 1, 2], (i, item, next) => {
         return next.abort(item + 1);
       }, items => {
         should.exist(items);
@@ -239,7 +239,7 @@ describe('iterate', () => {
   describe('done', () => {
 
     it('should send the items array as an argument', done => {
-      iterate([0, 1, 2], (i, item, next) => {
+      shiterate([0, 1, 2], (i, item, next) => {
         return next();
       }, items => {
         should.exist(items);
@@ -253,7 +253,7 @@ describe('iterate', () => {
     });
 
     it('should send the updated items as an argument', done => {
-      iterate([0, 1, 2], (i, item, next) => {
+      shiterate([0, 1, 2], (i, item, next) => {
         return next(item + 1);
       }, items => {
         should.exist(items);
