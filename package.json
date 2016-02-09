@@ -1,0 +1,11 @@
+{
+  "name": "tiny-iterator",
+  "version": "0.1.0",
+  "description": "Synchronously iterates over an array",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Nathan Buchar",
+  "license": "MIT"
+}
