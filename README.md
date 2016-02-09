@@ -1,9 +1,9 @@
 Synchronasty [![Build Status](https://travis-ci.org/nathanbuchar/synchronasty.svg?branch=master)](https://travis-ci.org/nathanbuchar/synchronasty)
 ============
 
-One step at a time.
+**One step at a time.**
 
-**Synchronasty** is a made-up term used to define the act of performing one or more asynchronous tasks synchronously, which is to say that one task must finish before the next may run. Did I mention there are no dependencies?
+"Synchronasty" is a made-up term used to define the act of performing one or more asynchronous tasks synchronously, which is to say that one task must finish before the next may run. Did I mention there are no dependencies?
 
 For example, a synchronasty `for` loop is an iterator wherein we loop through each value in an array, but we wait to move on to the next value until it is explicitly told to do so. In this case, by calling `next()` within the intermediate function body.
 
@@ -22,7 +22,7 @@ $ npm install synchronasty
 
 ### Quick Start
 
-In the following example, `"Done!"` will be logged after three seconds have elapsed.
+In the following example, `"done!"` will be logged after three seconds have elapsed.
 
 ```js
 const iterate = require('synchronasty').iterate;
@@ -30,13 +30,18 @@ const iterate = require('synchronasty').iterate;
 iterate(['foo', 'bar', 'baz'], (i, item, next) => {
   setTimeout(next, 1000);
 }, () => {
-  console.log('Done!');
+  console.log('done!');
 });
 ```
 
 If you're familiar with the Node JS server framework [Hapi][external_link_hapi], you'll realize this is similar to how the `register()` method works when defining a plugin.
 
 Still curious? Check out the rest of the [examples][section_examples].
+
+
+
+***
+
 
 
 ### Usage
@@ -63,7 +68,7 @@ Still curious? Check out the rest of the [examples][section_examples].
 
      Calling `next.abort()` instead will immediately exit the iterator and call the `done` callback. Similar to `next()`, you can also pass an argument into `next.abort()` to update the value of the current item during the abort.
 
-* **`done`** is the function to call when the iteration has completed and. It sends the following arguments:
+* **`done`** is the function to call when the iteration has completed. It sends the following arguments:
 
   * `items` - The updated array, if applicable.
 
