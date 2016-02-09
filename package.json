@@ -1,6 +1,6 @@
 {
   "name": "synchronasty",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "One step at a time",
   "main": "index.js",
   "scripts": {
@@ -14,10 +14,10 @@
     "synchonasty",
     "iterate",
     "iterator",
-    "aynchronous",
+    "asynchronous",
     "synchronous",
     "sequence",
-    "sequence",
+    "sequencer",
     "for",
     "map",
     "each"
