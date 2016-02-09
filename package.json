@@ -1,6 +1,6 @@
 {
   "name": "synchronasty",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "One step at a time.",
   "main": "index.js",
   "scripts": {

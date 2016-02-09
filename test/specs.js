@@ -110,7 +110,9 @@ describe('iterate', () => {
     });
 
     it('should update the value of the current item', done => {
-      iterate([0, 1, 2], (i, item, next) => {
+      let arr = [0, 1, 2];
+
+      iterate(arr, (i, item, next) => {
         return next(item + 1);
       }, items => {
         should.exist(items);
@@ -119,6 +121,22 @@ describe('iterate', () => {
         expect(items[0]).to.equal(0 + 1);
         expect(items[1]).to.equal(1 + 1);
         expect(items[2]).to.equal(2 + 1);
+        done();
+      });
+    });
+
+    it('should not update the values of the orginal array', done => {
+      let arr = [0, 1, 2];
+
+      iterate(arr, (i, item, next) => {
+        return next(item + 1);
+      }, items => {
+        should.exist(items);
+
+        expect(items).to.have.length(3);
+        expect(items[0]).to.not.equal(arr[0]);
+        expect(items[1]).to.not.equal(arr[1]);
+        expect(items[2]).to.not.equal(arr[2]);
         done();
       });
     });

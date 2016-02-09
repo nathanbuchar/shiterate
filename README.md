@@ -118,9 +118,12 @@ console.log('done!');
 > +0s "baz"
 ```
 
+You can see above that `"done!"` is logged before any of the item values. This is because the `setTimeout` does not stop the `for` loop from continuing.
+
+
 #### The Solution
 
-You can see above that `"done!"` is logged before any of the item values. This is because the `setTimeout` cannot stop the for loop from continuing; It simply executes all code within the body and moves on. With **Synchronasty**, this can be remedied by the following:
+With **Synchronasty**, this can be remedied by the following:
 
 ```js
 const iterate = require('synchronasty').iterate;
@@ -146,7 +149,7 @@ iterate(['foo', 'bar', 'baz'], (i, item, next) => {
 
 You can see that `"foo"` is logged one second after `"start"`, and `"bar`" and `"baz"` are also logged one second apart, after which `"done!"` is logged. Perfect!
 
-**Synchronasty** can also be used to act as a `map` function. By simply passing in a argument to the `next()` function, you will update the value of the current item. When the iterator has completed, the updated array will be sent as the first parameter in your `done()` callback,
+**Synchronasty** can also be used to act as a `map` function. By simply passing in a argument to the `next()` function, you will update the value of the current item. When the iterator has completed, the updated array will be sent as the first parameter in your `done()` callback. It should be noted that the original array will not altered.
 
 In this example, we add `1` to each item in the array.
 
@@ -162,6 +165,7 @@ iterate([0, 1, 2], (i, item, next) => {
 ```
 > +0s [1, 2, 3]
 ```
+
 
 
 ***
@@ -196,7 +200,7 @@ iterate([0, 1, 2], (i, item, next) => {
       });
       ```
 
-  3. In this example, we iterate to the next item after a certain number of seconds equal to the index of the current item. Then, we append an `"-qux"` to the item value. In this case, this example will take six seconds to execute.
+  3. In this example, we iterate to the next item after a certain number of seconds equal to the index of the current item. Then, we append an `"-qux"` to the item value. In this case, this example will take three seconds to execute.
 
       ```js
       const iterate = require('synchronasty').iterate;
