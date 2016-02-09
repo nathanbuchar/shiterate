@@ -1,7 +1,7 @@
 {
   "name": "synchronasty",
   "version": "0.1.4",
-  "description": "One step at a time",
+  "description": "One step at a time.",
   "main": "index.js",
   "scripts": {
     "test": "mocha test"
