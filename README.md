@@ -1,14 +1,91 @@
-TinyIterator
+Synchronasty
 ============
 
-Asynchronous `for` loops.
+One step at a time.
 
-With traditional `for` loops, you cannot specify at which point you'd like to move on to the next item in the array. For example, if you'd like to perform some sort of asynchronous logic, with a normal `for` loop, all items in the array will execute this logic in parallel. But with **TinyIterator**, you can specify exactly when you'd like to iterate to the next item simply by calling `next()`, or if you'd like to exit early, call `next.abort()`.
+**Synchronasty** is a made-up term used to define the act of performing one or more asynchronous tasks synchronously, which is to say that one task must finish before the next may run.
 
-Take the following `for` loop for example:
+For example, a synchronasty `for` loop is an iterator wherein we loop through each value in an array, but we wait to move on to the next value until it is explicitly told to do so. In this case, by calling `next()` within the intermediate function body.
+
+
+
+***
+
+
+
+### Installation
+
+```bash
+$ npm install synchronasty
+```
+
+
+### Quick Start
+
+In the following example, `"Done!"` will be logged after three seconds have elapsed.
+
+```js
+const iterate = require('synchronasty').iterate;
+
+iterate(['foo', 'bar', 'baz'], (i, item, next) => {
+  setTimeout(next, 1000);
+}, () => {
+  console.log('Done!');
+});
+```
+
+If you're familiar with the Node JS server framework [Hapi][external_url_hapi], you'll realize this is similar to how the `register()` method works when defining a plugin.
+
+Still curious? Check out the rest of the [examples][section_examples].
+
+
+### Usage
+
+**Definition**
+
+**`synchronasty.iterate(items, fn[, done]);`**
+
+
+**Parameters**
+
+* **`items`** (**required**) - The array of items you wish to iterate through.
+
+
+* **`fn`** (**required**) - The intermediate function that each item in the array will pass through. It sends the following arguments:
+
+  * `i` - A number that represents the index of the current item within the given array of items.
+
+  * `item` - May be of any type and represents the current item.
+
+  * `next` - The function to call when you're ready to move to the next item in the array.
+
+     If you pass an argument into this function, the item's value will be changed to the value of said argument.
+
+     Calling `next.abort()` instead will immediately exit the iterator and call the `done` callback. Similar to `next()`, you can also pass an argument into `next.abort()` to update the value of the current item during the abort.
+
+* **`done`** is the function to call when the iteration has completed and. It sends the following arguments:
+
+  * `items` - The updated array, if applicable.
+
+
+
+***
+
+
+### Problem and Solution
+
+**The Problem**
+
+With traditional `for` loops, you cannot specify at which point you'd like to move on to the next item in the array. For example, if you'd like to perform some sort of asynchronous logic, all items in the array will execute this logic in parallel; an effect that is sometimes undesired.
+
+But with **Synchronasty**, you can specify exactly when you'd like to iterate to the next item in the array simply by calling `next()` at whatever point you'd like. Additionally, if you need to exit early, just call `next.abort()`.
+
+Take the following traditional `for` loop for example:
 
 ```js
 let items = ['foo', 'bar', 'baz'];
+
+console.log('start');
 
 for (let i = 0; i < items.length; i++) {
   let item = items[i];
@@ -18,19 +95,24 @@ for (let i = 0; i < items.length; i++) {
   }, 1000);
 }
 
-console.log('Done!');
-
-// -------------------------------------
-// +0s => "Done!"
-// +1s => "foo"
-// +1s => "bar"
-// +1s => "baz"
+console.log('done!');
+```
+```
+> +0s "start"
+> +0s "done!"
+> +1s "foo"
+> +0s "bar"
+> +0s "baz"
 ```
 
-You can see above that `"Done!"` is logged before any of the item values. With **TinyIterator**, we can overcome this by performing the following:
+**The Solve**
+
+You can see above that `"done!"` is logged before any of the item values. This is because the `setTimeout` cannot stop the for loop from continuing; It simply executes all code within the body and moves on. With **Synchronasty**, this can be remedied by the following:
 
 ```js
-const iterate = require('tiny-iterator');
+const iterate = require('synchronasty').iterate;
+
+console.log('start');
 
 iterate(['foo', 'bar', 'baz'], (i, item, next) => {
   setTimeout(() => {
@@ -38,95 +120,47 @@ iterate(['foo', 'bar', 'baz'], (i, item, next) => {
     return next();
   }, 1000);
 }, () => {
-  console.log('Done!');
+  console.log('done!');
 });
-
-// -------------------------------------
-// +0s => "foo"
-// +1s => "bar"
-// +2s => "baz"
-// +2s => "Done!"
+```
+```
+> +0s "start"
+> +1s "foo"
+> +1s "bar"
+> +1s "baz"
+> +0s "Done!"
 ```
 
-**TinyIterator** can also act as an asynchronous `map` function. By simply passing in a argument to the `next()` function, you will update the value of the current item. When the iterator has completed, the updated array will be sent as the first parameter in your `done()` callback,
+You can see that `"foo"` is logged one second after `"start"`, and `"bar`" and `"baz"` are also logged one second apart, after which `"done!"` is logged. Perfect!
 
+**Synchronasty** can also be used to act as a `map` function. By simply passing in a argument to the `next()` function, you will update the value of the current item. When the iterator has completed, the updated array will be sent as the first parameter in your `done()` callback,
 
-
-***
-
-
-
-Installation
-------------
-
-```bash
-npm install tiny-iterator
-```
-
-
-Quick Start
------------
-
-In the following example, `"Done!"` will be logged after three seconds have elapsed.
+In this example, we add `1` to each item in the array.
 
 ```js
-const iterate = require('tiny-iterator');
+const iterate = require('synchronasty').iterate;
 
-iterate(['foo', 'bar', 'baz'], (i, item, next) => {
-  setTimeout(next, 1000);
-}, () => {
-  console.log('Done!');
+iterate([0, 1, 2], (i, item, next) => {
+  return next(item + 1);
+}, items => {
+  console.log(items);
 });
 ```
-
-Check out the rest of the [examples](#examples).
-
-
-Usage
------
-
-**Definition**
-
-**`iterate(items, fn[, done]);`**
-
-
-**Parameters**
-
-|    Name |    Type    | Description             | Required |
-| ------: | :--------: | :---------------------- | :------: |
-| `items` |  `Array`   | Array of items to iterate through. | ✓ |
-|    `fn` | `Function` | Intermediate function that each item in the array will pass through. | ✓ |
-|  `done` | `Function` | Function to call when the iteration has completed. | |
-
-
-* **`items`** is the array of items you wish to iterate through.
-
-
-* **`fn`** is the intermediate function that each item in the array will pass through and it sends the following arguments:
-
-  * `i` - A number that represents the index of the current item within the given array of items.
-
-  * `item` - May be of any type and represents the current item.
-
-  * `next` - The function to call when you're ready to move to the next item in the array. If you pass an argument into this function, the item's value will be changed to the value of said argument. Calling `next.abort()` instead will immediately exit the iterator and call the `done` callback. Similar to `next()`, you can also pass an argument into `next.abort()` to update the value of the current item during the abort.
-
-* **`done`** is the function to call when the iteration has completed and it sends the following arguments:
-
-  * `items` - The updated array, if applicable.
-
+```
+> +0s [1, 2, 3]
+```
 
 
 ***
 
 
 
-Examples
---------
+### Examples
 
   1. In this case, we aren't doing anything a `for` loop couldn't accomplish. However, unlike a `for` loop, we move on to the next item in the array at our own will, simply by calling `next()`. If we never call `next()`, we will never move on to the second item in the array.
 
       ```js
-      const iterate = require('tiny-iterator');
+      const iterate = require('synchronasty').iterate;
 
       iterate(['foo', 'bar', 'baz'], (i, item, next) => {
         console.log('The item is ' + item);
@@ -137,7 +171,7 @@ Examples
   2. Now, consider the following. Here, we are performing an asynchronous operation within the intermediate function. By calling `next()` within the callback of the `setTimeout`, we can be sure that we will not move on to the next item in the array until one second has elapsed. This functionality is not at all possible within a `for` loop.
 
       ```js
-      const iterate = require('tiny-iterator');
+      const iterate = require('synchronasty').iterate;
 
       iterate(['foo', 'bar', 'baz'], (i, item, next) => {
         setTimeout(() => {
@@ -152,7 +186,7 @@ Examples
   3. In this example, we iterate to the next item after a certain number of seconds equal to the index of the current item. Then, we append an `"-qux"` to the item value. In this case, this example will take six seconds to execute.
 
       ```js
-      const iterate = require('tiny-iterator');
+      const iterate = require('synchronasty').iterate;
 
       iterate(['foo', 'bar', 'baz'], (i, item, next) => {
         let delay = 1000 * i;
@@ -170,6 +204,8 @@ Examples
   4. In this example, for each person we perform some sort of asynchronous operation then we move onto the next person in the array after setting the value of the previous person to `true`. If the person's name is `"Numan"`, we set the value to `false` and exit the iterator early. In this example, we never make it to `"Kramer"`.
 
       ```js
+      const iterate = require('synchronasty').iterate;
+
       let people = ['Jerry', 'Elaine', 'George', 'Numan', 'Kramer'];
 
       function doSomethingAsynchronous() {
@@ -193,3 +229,15 @@ Examples
         // => [true, true, true, false, "Kramer"]
       });
       ```
+
+
+
+
+
+
+[section_installation]: #installation
+[section_quickStart]: #quick-start
+[section_usage]: #usage
+[section_examples]: #examples
+
+[external_url_hapi]: http://hapijs.com
