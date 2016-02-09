@@ -1,4 +1,4 @@
-Synchronasty
+Synchronasty [![Build Status](https://travis-ci.org/nathanbuchar/synchronasty.svg?branch=master)](https://travis-ci.org/nathanbuchar/synchronasty)
 ============
 
 One step at a time.
