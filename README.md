@@ -206,12 +206,12 @@ iterate([0, 1, 2], (i, item, next) => {
       });
       ```
 
-  4. In this example, for each person we perform some sort of asynchronous operation then we move onto the next person in the array after setting the value of the previous person to `true`. If the person's name is `"Numan"`, we set the value to `false` and exit the iterator early. In this example, we never make it to `"Kramer"`.
+  4. In this example, for each person we perform some sort of asynchronous operation then we move onto the next person in the array after setting the value of the previous person to `true`. If the person's name is `"Newman"`, we set the value to `false` and exit the iterator early. In this example, we never make it to `"Kramer"`.
 
       ```js
       const iterate = require('synchronasty').iterate;
 
-      let people = ['Jerry', 'Elaine', 'George', 'Numan', 'Kramer'];
+      let people = ['Jerry', 'Elaine', 'George', 'Newman', 'Kramer'];
 
       function doSomethingAsynchronous() {
         return new Promise((resolve, reject) => {
@@ -223,7 +223,7 @@ iterate([0, 1, 2], (i, item, next) => {
 
       iterate(people, (i, item, next) => {
         doSomethingAsynchronous().then(() => {
-          if (item !== 'Numan') {
+          if (item !== 'Newman') {
             return next(true);
           } else {
             return next.abort(false);
