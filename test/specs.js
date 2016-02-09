@@ -31,14 +31,14 @@ describe('iterate', () => {
       }
     });
 
-    it('should not throw if "items" is empty', () => {
+    it('should not throw if "items" is empty', done => {
       try {
         iterate([], (i, item, next) => {
           return next();
         }, items => {
           should.exist(items);
-
           expect(items.length).to.equal(0);
+          done();
         });
       } catch (err) {
         should.not.exist(err);
@@ -82,7 +82,7 @@ describe('iterate', () => {
 
   describe('next', () => {
 
-    it('should step to the next iteration', () => {
+    it('should step to the next iteration', done => {
       let step = 0;
 
       iterate([0, 1, 2], (i, item, next) => {
@@ -90,10 +90,11 @@ describe('iterate', () => {
         return next();
       }, () => {
         expect(step).to.equal(3);
+        done();
       });
     });
 
-    it('should wait for "next" before stepping to the next iteration', () => {
+    it('should wait for "next" before stepping to the next iteration', done => {
       let step = 0;
 
       iterate([0, 1, 2], (i, item, next) => {
@@ -101,11 +102,14 @@ describe('iterate', () => {
 
         setTimeout(() => {
           expect(step).to.equal(i + 1);
+          return next();
         }, 100);
+      }, () => {
+        done();
       });
     });
 
-    it('should update the value of the current item', () => {
+    it('should update the value of the current item', done => {
       iterate([0, 1, 2], (i, item, next) => {
         return next(item + 1);
       }, items => {
@@ -115,22 +119,25 @@ describe('iterate', () => {
         expect(items[0]).to.equal(0 + 1);
         expect(items[1]).to.equal(1 + 1);
         expect(items[2]).to.equal(2 + 1);
+        done();
       });
     });
   });
 
   describe('abort', () => {
 
-    it('should immediately abort the iteration when called', () => {
+    it('should immediately abort the iteration when called', done => {
       iterate([0, 1, 2], (i, item, next) => {
         expect(i).to.not.equal(1);
         expect(i).to.not.equal(2);
 
         return next.abort();
+      }, () => {
+        done();
       });
     });
 
-    it('should not iterate if "next" is called after "abort"', () => {
+    it('should not iterate if "next" is called after "abort"', done => {
       iterate([0, 1, 2], (i, item, next) => {
         expect(i).to.not.equal(1);
         expect(i).to.not.equal(2);
@@ -138,10 +145,12 @@ describe('iterate', () => {
         // Don't ever do this, please.
         next.abort();
         next();
+      }, () => {
+        done()
       });
     });
 
-    it('should update the value of the current item', () => {
+    it('should update the value of the current item', done => {
       iterate([0, 1, 2], (i, item, next) => {
         return next.abort(item + 1);
       }, items => {
@@ -151,13 +160,14 @@ describe('iterate', () => {
         expect(items[0]).to.equal(0 + 1);
         expect(items[1]).to.equal(1);
         expect(items[2]).to.equal(2);
+        done();
       });
     });
   });
 
   describe('done', () => {
 
-    it('should send the items array as an argument', () => {
+    it('should send the items array as an argument', done => {
       iterate([0, 1, 2], (i, item, next) => {
         return next();
       }, items => {
@@ -167,10 +177,11 @@ describe('iterate', () => {
         expect(items[0]).to.equal(0);
         expect(items[1]).to.equal(1);
         expect(items[2]).to.equal(2);
+        done();
       });
     });
 
-    it('should send the updated items as an argument', () => {
+    it('should send the updated items as an argument', done => {
       iterate([0, 1, 2], (i, item, next) => {
         return next(item + 1);
       }, items => {
@@ -180,6 +191,7 @@ describe('iterate', () => {
         expect(items[0]).to.equal(0 + 1);
         expect(items[1]).to.equal(1 + 1);
         expect(items[2]).to.equal(2 + 1);
+        done();
       });
     });
   });
