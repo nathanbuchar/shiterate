@@ -78,6 +78,31 @@ describe('shiterate', () => {
         expect(err.toString()).to.contain('"done" must be a function.');
       }
     });
+
+    it('should allow nested shiterations', done => {
+      let iItems = ['a', 'b', 'c'];
+      let jItems = ['x', 'y', 'z'];
+
+      shiterate(iItems, (i, iItem, iNext) => {
+        shiterate(jItems, (j, jItem, jNext) => {
+          return jNext(iItem + jItem);
+        }, jItemsDone => {
+          // Expect [(a|b|c)x, (a|b|c)x, (a|b|c)x]
+          for (var x = 0; x < jItemsDone.length; x++) {
+            expect(jItemsDone[x]).to.equal(iItems[i] + jItems[x]);
+          }
+
+          return iNext();
+        });
+      }, iItemsDone => {
+        // Expect [a, b, c]
+        for (var x = 0; x < iItemsDone.length; x++) {
+          expect(iItemsDone[x]).to.equal(iItems[x]);
+        }
+
+        done();
+      });
+    });
   });
 
   describe('next', () => {
