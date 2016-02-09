@@ -122,6 +122,59 @@ describe('iterate', () => {
         done();
       });
     });
+
+    it('should allow for continued execution if "next" is outside of asynchronous code', done => {
+      let step = 0;
+      let count = 0;
+
+      iterate([0, 1, 2], (i, item, next) => {
+        step++;
+
+        setTimeout(() => {
+          count++;
+
+          // Step should equal 3 in all cases because this function body will
+          // always run after all steps have been iterated.
+          expect(step).to.equal(3);
+
+          if (count === 3) {
+            done();
+          }
+        }, 100);
+
+        return next();
+      }, () => {
+        expect(step).to.equal(3);
+        expect(count).to.equal(0);
+      });
+    });
+
+    it('should allow for continued execution if "next" is not returned', done => {
+      let step = 0;
+      let count = 0;
+
+      iterate([0, 1, 2], (i, item, next) => {
+        step++;
+
+        // Note that "next" is not returned.
+        next();
+
+        setTimeout(() => {
+          count++;
+
+          // Step should equal 3 in all cases because this function body will
+          // always run after all steps have been iterated.
+          expect(step).to.equal(3);
+
+          if (count === 3) {
+            done();
+          }
+        }, 100);
+      }, () => {
+        expect(step).to.equal(3);
+        expect(count).to.equal(0);
+      });
+    });
   });
 
   describe('abort', () => {
@@ -146,7 +199,7 @@ describe('iterate', () => {
         next.abort();
         next();
       }, () => {
-        done()
+        done();
       });
     });
 
