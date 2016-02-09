@@ -3,7 +3,7 @@ Synchronasty
 
 One step at a time.
 
-**Synchronasty** is a made-up term used to define the act of performing one or more asynchronous tasks synchronously, which is to say that one task must finish before the next may run.
+**Synchronasty** is a made-up term used to define the act of performing one or more asynchronous tasks synchronously, which is to say that one task must finish before the next may run. Did I mention there are no dependencies?
 
 For example, a synchronasty `for` loop is an iterator wherein we loop through each value in an array, but we wait to move on to the next value until it is explicitly told to do so. In this case, by calling `next()` within the intermediate function body.
 
