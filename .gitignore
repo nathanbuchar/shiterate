@@ -1,0 +1,17 @@
+.DS_Store
+.atomignore
+.build
+.cache
+.env
+.gitconfig
+.jsdoc
+.sass-cache
+.tmp
+
+*~
+*.bak
+*.log
+*.orig
+*.zip
+
+node_modules

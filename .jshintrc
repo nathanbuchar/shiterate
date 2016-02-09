@@ -1,0 +1,7 @@
+{
+  "node": true,
+  "esnext": true,
+  "eqeqeq": true,
+  "indent": 2,
+  "quotmark": "single"
+}
