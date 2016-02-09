@@ -1,11 +1,11 @@
-Synchronasty [![Build Status](https://travis-ci.org/nathanbuchar/synchronasty.svg?branch=master)](https://travis-ci.org/nathanbuchar/synchronasty)
-============
+Shiterate [![Build Status](https://travis-ci.org/nathanbuchar/shiterate.svg?branch=master)](https://travis-ci.org/nathanbuchar/shiterate)
+=========
 
 **One step at a time.**
 
-"Synchronasty" is a made-up term used to define the act of performing one or more asynchronous tasks synchronously, which is to say that one task must finish before the next may run.
+"Shiteration" is a made-up term used to define the act of iterating over one or more asynchronous tasks synchronously, which is to say that one task must finish before the next may run.
 
-For example, a synchronasty `for` loop is an iterator wherein we loop through each value in an array, but we wait to move on to the next value until it is explicitly told to do so. In this case, by calling `next()` within the intermediate function body.
+For example, a shiterative `for` loop is an iterator wherein we loop through each value in an array, but we wait to move on to the next value until we explicitly tell it to do so. In this case, by calling `next()` within the intermediate function body.
 
 Oh, and did I mention there are no dependencies?
 
@@ -18,7 +18,7 @@ Oh, and did I mention there are no dependencies?
 ### Installation
 
 ```bash
-$ npm install synchronasty
+$ npm install shiterate
 ```
 
 **Note:** Requires Node 4.0 or above.
@@ -29,9 +29,9 @@ $ npm install synchronasty
 In the following example, `"done!"` will be logged after three seconds have elapsed.
 
 ```js
-const iterate = require('synchronasty').iterate;
+const shiterate = require('shiterate');
 
-iterate(['foo', 'bar', 'baz'], (i, item, next) => {
+shiterate(['foo', 'bar', 'baz'], (i, item, next) => {
   setTimeout(next, 1000);
 }, () => {
   console.log('done!');
@@ -52,7 +52,7 @@ Still curious? Check out the rest of the [examples][section_examples].
 
 **Definition**
 
-**`synchronasty.iterate(items, fn[, done]);`**
+**`shiterate(items, fn[, done]);`**
 
 
 **Parameters**
@@ -91,7 +91,7 @@ Still curious? Check out the rest of the [examples][section_examples].
 
 With traditional `for` loops, you cannot specify at which point you'd like to move on to the next item in the array. For example, if you'd like to perform some sort of asynchronous logic, all items in the array will execute this logic in parallel; an effect that is sometimes undesired.
 
-But with **Synchronasty**, you can specify exactly when you'd like to iterate to the next item in the array simply by calling `next()` at whatever point you'd like. Additionally, if you need to exit early, just call `next.abort()`.
+But with **Shiterate**, you can specify exactly when you'd like to iterate to the next item in the array simply by calling `next()` at whatever point you'd like. Additionally, if you need to exit early, just call `next.abort()`.
 
 Take the following traditional `for` loop for example:
 
@@ -123,14 +123,14 @@ You can see above that `"done!"` is logged before any of the item values. This i
 
 #### The Solution
 
-With **Synchronasty**, this can be remedied by the following:
+With **Shiterate**, this can be remedied by the following:
 
 ```js
-const iterate = require('synchronasty').iterate;
+const shiterate = require('shiterate');
 
 console.log('start');
 
-iterate(['foo', 'bar', 'baz'], (i, item, next) => {
+shiterate(['foo', 'bar', 'baz'], (i, item, next) => {
   setTimeout(() => {
     console.log(item);
     return next();
@@ -149,14 +149,14 @@ iterate(['foo', 'bar', 'baz'], (i, item, next) => {
 
 You can see that `"foo"` is logged one second after `"start"`, and `"bar`" and `"baz"` are also logged one second apart, after which `"done!"` is logged. Perfect!
 
-**Synchronasty** can also be used to act as a `map` function. By simply passing in a argument to the `next()` function, you will update the value of the current item. When the iterator has completed, the updated array will be sent as the first parameter in your `done()` callback. It should be noted that the original array will not altered.
+**Shiterate** can also be used to act as a `map` function. By simply passing in a argument to the `next()` function, you will update the value of the current item. When the iterator has completed, the updated array will be sent as the first parameter in your `done()` callback. It should be noted that the original array will not altered.
 
 In this example, we add `1` to each item in the array.
 
 ```js
-const iterate = require('synchronasty').iterate;
+const shiterate = require('shiterate');
 
-iterate([0, 1, 2], (i, item, next) => {
+shiterate([0, 1, 2], (i, item, next) => {
   return next(item + 1);
 }, items => {
   console.log(items);
@@ -177,9 +177,9 @@ iterate([0, 1, 2], (i, item, next) => {
   1. In this case, we aren't doing anything a `for` loop couldn't accomplish. However, unlike a `for` loop, we move on to the next item in the array at our own will, simply by calling `next()`. If we never call `next()`, we will never move on to the second item in the array.
 
       ```js
-      const iterate = require('synchronasty').iterate;
+      const shiterate = require('shiterate');
 
-      iterate(['foo', 'bar', 'baz'], (i, item, next) => {
+      shiterate(['foo', 'bar', 'baz'], (i, item, next) => {
         console.log('The item is ' + item);
         return next();
       });
@@ -188,9 +188,9 @@ iterate([0, 1, 2], (i, item, next) => {
   2. Now, consider the following. Here, we are performing an asynchronous operation within the intermediate function. By calling `next()` within the callback of the `setTimeout`, we can be sure that we will not move on to the next item in the array until one second has elapsed. This functionality is not at all possible within a `for` loop.
 
       ```js
-      const iterate = require('synchronasty').iterate;
+      const shiterate = require('shiterate');
 
-      iterate(['foo', 'bar', 'baz'], (i, item, next) => {
+      shiterate(['foo', 'bar', 'baz'], (i, item, next) => {
         setTimeout(() => {
           return next();
         }, 1000);
@@ -203,9 +203,9 @@ iterate([0, 1, 2], (i, item, next) => {
   3. In this example, we iterate to the next item after a certain number of seconds equal to the index of the current item. Then, we append an `"-qux"` to the item value. In this case, this example will take three seconds to execute.
 
       ```js
-      const iterate = require('synchronasty').iterate;
+      const shiterate = require('shiterate');
 
-      iterate(['foo', 'bar', 'baz'], (i, item, next) => {
+      shiterate(['foo', 'bar', 'baz'], (i, item, next) => {
         let delay = 1000 * i;
         let newVal = item + '-qux';
 
@@ -221,7 +221,7 @@ iterate([0, 1, 2], (i, item, next) => {
   4. In this example, for each person we perform some sort of asynchronous operation then we move onto the next person in the array after setting the value of the previous person to `true`. If the person's name is `"Newman"`, we set the value to `false` and exit the iterator early. In this example, we never make it to `"Kramer"`.
 
       ```js
-      const iterate = require('synchronasty').iterate;
+      const shiterate = require('shiterate');
 
       let people = ['Jerry', 'Elaine', 'George', 'Newman', 'Kramer'];
 
@@ -233,7 +233,7 @@ iterate([0, 1, 2], (i, item, next) => {
         });
       }
 
-      iterate(people, (i, item, next) => {
+      shiterate(people, (i, item, next) => {
         doSomethingAsynchronous().then(() => {
           if (item !== 'Newman') {
             return next(true);

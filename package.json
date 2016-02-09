@@ -1,6 +1,6 @@
 {
-  "name": "synchronasty",
-  "version": "0.1.6",
+  "name": "shiterate",
+  "version": "0.1.7",
   "description": "One step at a time.",
   "main": "index.js",
   "scripts": {
@@ -11,13 +11,14 @@
     "email": "hello@nathanbuchar.com"
   },
   "keywords": [
-    "synchonasty",
+    "shiterate",
     "iterate",
     "iterator",
     "asynchronous",
     "synchronous",
     "sequence",
     "sequencer",
+    "loop",
     "for",
     "map",
     "each"
@@ -27,10 +28,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/nathanbuchar/synchronasty.git"
+    "url": "https://github.com/nathanbuchar/shiterate.git"
   },
   "bugs": {
-    "url": "https://github.com/nathanbuchar/synchronasty/issues"
+    "url": "https://github.com/nathanbuchar/shiterate/issues"
   },
   "license": "MIT",
   "devDependencies": {
