@@ -21,6 +21,8 @@ Oh, and did I mention there are no dependencies?
 $ npm install synchronasty
 ```
 
+**Note:** Requires Node 4.0 or above.
+
 
 ### Quick Start
 
@@ -66,9 +68,13 @@ Still curious? Check out the rest of the [examples][section_examples].
 
   * `next` - The function to call when you're ready to move to the next item in the array.
 
-     If you pass an argument into this function, the item's value will be changed to the value of said argument.
+    If you pass an argument into this function, the item's value will be changed to the value of said argument.
 
-     Calling `next.abort()` instead will immediately exit the iterator and call the `done` callback. Similar to `next()`, you can also pass an argument into `next.abort()` to update the value of the current item during the abort.
+    **`next([newVal])`**
+
+    Calling `next.abort()` instead will immediately exit the iterator and call the `done` callback. Similar to `next()`, you can also pass an argument into `next.abort()` to update the value of the current item during the abort.
+
+    **`next.abort([newVal])`**
 
 * **`done`** is the function to call when the iteration has completed. It sends the following arguments:
 
@@ -81,7 +87,7 @@ Still curious? Check out the rest of the [examples][section_examples].
 
 ### Problem and Solution
 
-**The Problem**
+#### The Problem
 
 With traditional `for` loops, you cannot specify at which point you'd like to move on to the next item in the array. For example, if you'd like to perform some sort of asynchronous logic, all items in the array will execute this logic in parallel; an effect that is sometimes undesired.
 
@@ -112,7 +118,7 @@ console.log('done!');
 > +0s "baz"
 ```
 
-**The Solve**
+#### The Solution
 
 You can see above that `"done!"` is logged before any of the item values. This is because the `setTimeout` cannot stop the for loop from continuing; It simply executes all code within the body and moves on. With **Synchronasty**, this can be remedied by the following:
 
