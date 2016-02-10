@@ -1,7 +1,7 @@
 /**
  * Public interface for Shiterate.
  *
- * @module lib/index
+ * @module index
  * @exports {Function} shiterate
  * @author Nathan Buchar <hello@nathanbuchar.com>
  * @license MIT
