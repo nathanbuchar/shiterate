@@ -23,7 +23,7 @@ describe('shiterate', () => {
 
     it('should not throw if "done" is not defined', () => {
       try {
-        shiterate([0, 1, 2], (i, item, next) => {
+        shiterate([0, 1, 2], (value, n, next) => {
           return next();
         });
       } catch (err) {
@@ -31,13 +31,13 @@ describe('shiterate', () => {
       }
     });
 
-    it('should not throw if "items" is empty', done => {
+    it('should not throw if "array" is empty', done => {
       try {
-        shiterate([], (i, item, next) => {
+        shiterate([], (value, n, next) => {
           return next();
-        }, items => {
-          should.exist(items);
-          expect(items.length).to.equal(0);
+        }, values => {
+          should.exist(values);
+          expect(values.length).to.equal(0);
           done();
         });
       } catch (err) {
@@ -45,31 +45,31 @@ describe('shiterate', () => {
       }
     });
 
-    it('should throw if "items" is not an array', () => {
+    it('should throw if "array" is not an array', () => {
       try {
-        shiterate('not an array', (i, item, next) => {
+        shiterate('not an array', (value, n, next) => {
           return next();
         });
       } catch (err) {
         should.exist(err);
 
-        expect(err.toString()).to.contain('"items" must be an array.');
+        expect(err.toString()).to.contain('"array" must be an array.');
       }
     });
 
-    it('should throw if "fn" is not a function', () => {
+    it('should throw if "iteratee" is not a function', () => {
       try {
         shiterate([0, 1, 2], 'not a function');
       } catch (err) {
         should.exist(err);
 
-        expect(err.toString()).to.contain('"fn" must be a function.');
+        expect(err.toString()).to.contain('"iteratee" must be a function.');
       }
     });
 
     it('should throw if "done" exists and is not a function', () => {
       try {
-        shiterate([0, 1, 2], (i, item, next) => {
+        shiterate([0, 1, 2], (value, n, next) => {
           return next();
         }, 'not a function');
       } catch (err) {
@@ -79,25 +79,25 @@ describe('shiterate', () => {
       }
     });
 
-    it('should allow nested shiterations', done => {
-      let iItems = ['a', 'b', 'c'];
-      let jItems = ['x', 'y', 'z'];
+    it('should allow for nested shiterations', done => {
+      let iValues = ['a', 'b', 'c'];
+      let jValues = ['x', 'y', 'z'];
 
-      shiterate(iItems, (i, iItem, iNext) => {
-        shiterate(jItems, (j, jItem, jNext) => {
-          return jNext(iItem + jItem);
-        }, jItemsDone => {
+      shiterate(iValues, (iValue, iN, iNext) => {
+        shiterate(jValues, (jValue, jN, jNext) => {
+          return jNext(iValue + jValue);
+        }, jValuesDone => {
           // Expect [(a|b|c)x, (a|b|c)x, (a|b|c)x]
-          for (var x = 0; x < jItemsDone.length; x++) {
-            expect(jItemsDone[x]).to.equal(iItems[i] + jItems[x]);
+          for (var x = 0; x < jValuesDone.length; x++) {
+            expect(jValuesDone[x]).to.equal(iValues[iN] + jValues[x]);
           }
 
           return iNext();
         });
-      }, iItemsDone => {
+      }, iValuesDone => {
         // Expect [a, b, c]
-        for (var x = 0; x < iItemsDone.length; x++) {
-          expect(iItemsDone[x]).to.equal(iItems[x]);
+        for (var x = 0; x < iValuesDone.length; x++) {
+          expect(iValuesDone[x]).to.equal(iValues[x]);
         }
 
         done();
@@ -110,7 +110,7 @@ describe('shiterate', () => {
     it('should step to the next iteration', done => {
       let step = 0;
 
-      shiterate([0, 1, 2], (i, item, next) => {
+      shiterate([0, 1, 2], (value, n, next) => {
         step++;
         return next();
       }, () => {
@@ -122,11 +122,11 @@ describe('shiterate', () => {
     it('should wait for "next" before stepping to the next iteration', done => {
       let step = 0;
 
-      shiterate([0, 1, 2], (i, item, next) => {
+      shiterate([0, 1, 2], (value, n, next) => {
         step++;
 
         setTimeout(() => {
-          expect(step).to.equal(i + 1);
+          expect(step).to.equal(n + 1);
           return next();
         }, 100);
       }, () => {
@@ -137,31 +137,31 @@ describe('shiterate', () => {
     it('should update the value of the current item', done => {
       let arr = [0, 1, 2];
 
-      shiterate(arr, (i, item, next) => {
-        return next(item + 1);
-      }, items => {
-        should.exist(items);
+      shiterate(arr, (value, n, next) => {
+        return next(value + 1);
+      }, values => {
+        should.exist(values);
 
-        expect(items).to.have.length(3);
-        expect(items[0]).to.equal(0 + 1);
-        expect(items[1]).to.equal(1 + 1);
-        expect(items[2]).to.equal(2 + 1);
+        expect(values).to.have.length(3);
+        expect(values[0]).to.equal(0 + 1);
+        expect(values[1]).to.equal(1 + 1);
+        expect(values[2]).to.equal(2 + 1);
         done();
       });
     });
 
-    it('should not update the values of the orginal array', done => {
+    it('should slices the orginal array', done => {
       let arr = [0, 1, 2];
 
-      shiterate(arr, (i, item, next) => {
-        return next(item + 1);
-      }, items => {
-        should.exist(items);
+      shiterate(arr, (value, n, next) => {
+        return next(value + 1);
+      }, values => {
+        should.exist(values);
 
-        expect(items).to.have.length(3);
-        expect(items[0]).to.not.equal(arr[0]);
-        expect(items[1]).to.not.equal(arr[1]);
-        expect(items[2]).to.not.equal(arr[2]);
+        expect(values).to.have.length(3);
+        expect(values[0]).to.not.equal(arr[0]);
+        expect(values[1]).to.not.equal(arr[1]);
+        expect(values[2]).to.not.equal(arr[2]);
         done();
       });
     });
@@ -170,7 +170,7 @@ describe('shiterate', () => {
       let step = 0;
       let count = 0;
 
-      shiterate([0, 1, 2], (i, item, next) => {
+      shiterate([0, 1, 2], (value, n, next) => {
         step++;
 
         setTimeout(() => {
@@ -196,7 +196,7 @@ describe('shiterate', () => {
       let step = 0;
       let count = 0;
 
-      shiterate([0, 1, 2], (i, item, next) => {
+      shiterate([0, 1, 2], (value, n, next) => {
         step++;
 
         // Note that "next" is not returned.
@@ -222,10 +222,10 @@ describe('shiterate', () => {
 
   describe('abort', () => {
 
-    it('should immediately abort the iteration when called', done => {
-      shiterate([0, 1, 2], (i, item, next) => {
-        expect(i).to.not.equal(1);
-        expect(i).to.not.equal(2);
+    it('should immediately abort the iteration when invoked', done => {
+      shiterate([0, 1, 2], (value, n, next) => {
+        expect(n).to.not.equal(1);
+        expect(n).to.not.equal(2);
 
         return next.abort();
       }, () => {
@@ -233,29 +233,16 @@ describe('shiterate', () => {
       });
     });
 
-    it('should not iterate if "next" is called after "abort"', done => {
-      shiterate([0, 1, 2], (i, item, next) => {
-        expect(i).to.not.equal(1);
-        expect(i).to.not.equal(2);
-
-        // Don't ever do this, please.
-        next.abort();
-        next();
-      }, () => {
-        done();
-      });
-    });
-
     it('should update the value of the current item', done => {
-      shiterate([0, 1, 2], (i, item, next) => {
-        return next.abort(item + 1);
-      }, items => {
-        should.exist(items);
+      shiterate([0, 1, 2], (value, n, next) => {
+        return next.abort(value + 1);
+      }, values => {
+        should.exist(values);
 
-        expect(items).to.have.length(3);
-        expect(items[0]).to.equal(0 + 1);
-        expect(items[1]).to.equal(1);
-        expect(items[2]).to.equal(2);
+        expect(values).to.have.length(3);
+        expect(values[0]).to.equal(0 + 1);
+        expect(values[1]).to.equal(1);
+        expect(values[2]).to.equal(2);
         done();
       });
     });
@@ -263,30 +250,30 @@ describe('shiterate', () => {
 
   describe('done', () => {
 
-    it('should send the items array as an argument', done => {
-      shiterate([0, 1, 2], (i, item, next) => {
+    it('should send the sliced array as a parameter', done => {
+      shiterate([0, 1, 2], (value, n, next) => {
         return next();
-      }, items => {
-        should.exist(items);
+      }, values => {
+        should.exist(values);
 
-        expect(items).to.have.length(3);
-        expect(items[0]).to.equal(0);
-        expect(items[1]).to.equal(1);
-        expect(items[2]).to.equal(2);
+        expect(values).to.have.length(3);
+        expect(values[0]).to.equal(0);
+        expect(values[1]).to.equal(1);
+        expect(values[2]).to.equal(2);
         done();
       });
     });
 
-    it('should send the updated items as an argument', done => {
-      shiterate([0, 1, 2], (i, item, next) => {
-        return next(item + 1);
-      }, items => {
-        should.exist(items);
+    it('should send the updated sliced array as a parameter', done => {
+      shiterate([0, 1, 2], (value, n, next) => {
+        return next(value + 1);
+      }, values => {
+        should.exist(values);
 
-        expect(items).to.have.length(3);
-        expect(items[0]).to.equal(0 + 1);
-        expect(items[1]).to.equal(1 + 1);
-        expect(items[2]).to.equal(2 + 1);
+        expect(values).to.have.length(3);
+        expect(values[0]).to.equal(0 + 1);
+        expect(values[1]).to.equal(1 + 1);
+        expect(values[2]).to.equal(2 + 1);
         done();
       });
     });
