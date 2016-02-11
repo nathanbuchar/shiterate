@@ -233,19 +233,6 @@ describe('shiterate', () => {
       });
     });
 
-    it('should not iterate if "next" is called after "abort"', done => {
-      shiterate([0, 1, 2], (value, n, next) => {
-        expect(n).to.not.equal(1);
-        expect(n).to.not.equal(2);
-
-        // Don't ever do this, please.
-        next.abort();
-        next();
-      }, () => {
-        done();
-      });
-    });
-
     it('should update the value of the current item', done => {
       shiterate([0, 1, 2], (value, n, next) => {
         return next.abort(value + 1);

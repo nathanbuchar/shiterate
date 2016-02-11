@@ -35,11 +35,13 @@ The final implementation obviously has quite a few more bells and whistles, but 
 
 Obviously a vulgar fusion of *shit* and *iterate*, it appealed to me because:
 
-  1. It's concise; "iterate" is already in the name.
+  1. It wasn't taken on npm :tada:
 
-  2. Although this concept does have a few practical applications, in many cases it's unnecessary and impedes the flow of the program. This might be considered "ugly" or "shitty" when done without purpose.
+  2. It's concise; "iterate" is already in the name.
 
-  3. It wasn't taken on npm :tada:
+  3. Although this concept does have a few practical applications, in many cases it's unnecessary and impedes the flow of the program. This might be considered "ugly" or "shitty" when done without purpose.
+
+  4. Fight the power!
 
 
 
@@ -70,8 +72,6 @@ shiterate(['foo', 'bar', 'baz'], (value, n, next) => {
 });
 ```
 
-If you're familiar with the Node JS server framework [Hapi][external_link_hapi], you'll realize this is similar to how the `register()` method works when defining a plugin.
-
 Still curious? Check out the rest of the [examples][section_examples].
 
 
@@ -93,19 +93,19 @@ Still curious? Check out the rest of the [examples][section_examples].
 
 * **`iteratee`** *(Function)* - The function invoked per iteration. It passes the following parameters:
 
-  * `value` *(\*)* - The value of the array at the current index `n` during iteration.
+  * `value` *(&#42;)* - The value of the array at the current index `n` during iteration.
 
-  * `n` *(number)* - The index of the item that we are currently iterating through.
+  * `n` *(number)* - The index of the item that we are currently iterating.
 
   * `next` *(Function)* - The function invoked in order to iterate to the next item in `array`.
 
-    You can change the value of the current item by passing the new value into the `next` function.
+    You can change the value of the current item by passing a new value into the `next` function.
 
-    **`next([newValue])`**
+    `next([newValue])`
 
     Calling `next.abort()` instead will immediately exit the iteratee and invoke the `done` callback. Similar to `next()`, you can also pass an argument into `next.abort()` to change the value of the current item during the abort.
 
-    **`next.abort([newValue])`**
+    `next.abort([newValue])`
 
 * **`[done]`** *(Function)* - The function invoked when the iteration has finished. It passes the following parameters:
 
@@ -229,7 +229,5 @@ MIT
 [section_examples]: #examples
 [section_authors]: #authors
 [section_license]: #license
-
-[external_link_hapi]: http://hapijs.com
 
 [Nathan Buchar]: mailto:hello@nathanbuchar.com
