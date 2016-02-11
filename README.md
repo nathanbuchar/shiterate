@@ -14,7 +14,7 @@ Chaining promises using `.then` is also not a viable solution, as we may have an
 
 Enter: **Shiterate**.
 
-**Shiterate** allows you to loop through an array of any length, perform some sort of asynchronous logic, and ensure that the next task in the array will not start until the current task finished. Below is a very basic vanilla JS implementation of this concept—a self-referencing `iterator` function and an early prototype of **Shiterate**.
+**Shiterate** allows you to loop through an array of any length, perform some sort of asynchronous logic, and ensure that the next task in the array will not start until the current task has finished. Below is a very basic and compact vanilla JS implementation of this concept—a self-referencing `iterator` function and an early prototype of **Shiterate**.
 
 ```js
 function iterate(array, iteratee, done) {
