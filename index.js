@@ -1,1 +1,1 @@
-module.exports = require('./lib/shiterate');
+module.exports = require('./shiterate.min.js');
