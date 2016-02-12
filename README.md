@@ -1,7 +1,7 @@
-Shiterate [![Build Status](https://travis-ci.org/nathanbuchar/shiterate.svg?branch=master)](https://travis-ci.org/nathanbuchar/shiterate)
-=========
+Shiterate [![Build Status](https://travis-ci.org/nathanbuchar/shiterate.svg?branch=master)](https://travis-ci.org/nathanbuchar/shiterate) [![Dependencies](https://david-dm.org/nathanbuchar/shiterate.svg)](https://david-dm.org/nathanbuchar/shiterate)
+==================================================
 
-Essentially `forEach()` loops that wait.
+`forEach()` loops that wait.
 
 
 **When should I use it?**
