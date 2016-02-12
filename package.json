@@ -1,7 +1,7 @@
 {
   "name": "shiterate",
-  "version": "1.1.0",
-  "description": "One step at a time.",
+  "version": "1.1.1",
+  "description": "forEach()` loops that wait",
   "main": "shiterate.js",
   "scripts": {
     "test": "gulp test",
