@@ -3,13 +3,11 @@
  * @author Nathan Buchar
  */
 
-/* global it, describe, before, after, beforeEach, afterEach */
-
 'use strict';
 
 const chai = require('chai');
 
-const shiterate = require('../');
+const shiterate = require('../shiterate');
 
 /**
  * Chai assertion shorthands.

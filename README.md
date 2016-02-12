@@ -1,47 +1,45 @@
-Shiterate [![Build Status](https://travis-ci.org/nathanbuchar/shiterate.svg?branch=master)](https://travis-ci.org/nathanbuchar/shiterate)
-=========
+Shiterate [![Build Status](https://travis-ci.org/nathanbuchar/shiterate.svg?branch=master)](https://travis-ci.org/nathanbuchar/shiterate) [![Dependencies](https://david-dm.org/nathanbuchar/shiterate.svg)](https://david-dm.org/nathanbuchar/shiterate)
+==================================================
 
-**One step at a time.**
-
-"Shiteration" is a made-up term used to define the act of iterating over one or more asynchronous tasks synchronously, which is to say that one task must declare that it has finished before the next may run.
+`forEach()` loops that wait.
 
 
-#### Why should I use it?
+#### When should I use it?
 
-With traditional `for` loops, you cannot explicitly specify at which point you'd like to move on to the next item in the array. For example, if you need to perform some sort of asynchronous logic, all items in the array will execute this logic in parallel; An outcome that may sometimes be undesired.
+When you have an array of items that you need to loop through, but for each item in the array you need to perform something asynchronous and you can't continue to the next item in the array until the preceding item has finished. That's when.
 
-Chaining promises using `.then` is also not a viable solution, as we may have an unknown number of tasks to perform. `Promise.all` will get us one step closer, but we still end up running tasks in parallel.
+#### Just use promises. Do you even ES6, bro?
 
-Enter: **Shiterate**.
-
-**Shiterate** allows you to loop through an array of any length, perform some sort of asynchronous logic, and ensure that the next task in the array will not start until the current task has finished. Below is a very basic and compact vanilla JS implementation of this concept—a self-referencing `iterator` function and an early prototype of **Shiterate**.
+Promises will get us close! Except with `Promise.all`, all promises run in parallel, not one at a time—that's not what we want. But hey, if that's what you'd rather do, here's some starter code:
 
 ```js
-function iterate(array, iteratee, done) {
-  (function () {
-    return function iterator(n) {
-      iteratee(array[n], n++, function next() {
-        return n < array.length ? iterator(n) : done();
-      });
-    }
-  }())(0);
-}
+Promise.all(myCoolArray.map((val, i) => {
+  return new Promise((resolve, reject) => {
+    setTimeout(resolve, 1000);
+  });
+})).then(() => {
+  console.log('done');
+});
 ```
 
-The final implementation obviously has quite a few more bells and whistles, but this is essentially what's at the core. Oh, and did I mention there are no dependencies? :clap:
+#### No, chain the promises with `.then()`!
 
+I suppose you could…
 
-#### Why "Shiterate"?
+```js
+doSomething(arr[0])
+  .then(() => doSomething(arr[1]))
+  .then(() => doSomething(arr[2]))
+  .then(() => doSomething(arr[3]))
+  ...
+  .then(() => {
+    console.log('done');
+  });
+```
 
-Obviously a vulgar fusion of *shit* and *iterate*, it appealed to me because:
+#### {{some awesome package}} already does this!
 
-  1. It wasn't taken on npm :tada:
-
-  2. It's concise; "iterate" is already in the name.
-
-  3. Although this concept does have a few practical applications, in many cases it's unnecessary and impedes the flow of the program. This might be considered "ugly" or "shitty" when done without purpose.
-
-  4. Fight the power!
+Why can't you just be happy for me?
 
 
 
@@ -55,12 +53,10 @@ Obviously a vulgar fusion of *shit* and *iterate*, it appealed to me because:
 $ npm install shiterate
 ```
 
-**Note:** Requires Node 4.0 or above. Update your nodes!
-
 
 ### Quick Start
 
-In the following example, `"done!"` will be logged after three seconds have elapsed.
+In the following example, `"done"` will be logged after three seconds have elapsed.
 
 ```js
 const shiterate = require('shiterate');
@@ -68,11 +64,11 @@ const shiterate = require('shiterate');
 shiterate(['foo', 'bar', 'baz'], (value, n, next) => {
   setTimeout(next, 1000);
 }, () => {
-  console.log('done!');
+  console.log('done');
 });
 ```
 
-Still curious? Check out the rest of the [examples][section_examples].
+Still confused? Check out a few more [examples][section_examples].
 
 
 
@@ -97,9 +93,9 @@ Still curious? Check out the rest of the [examples][section_examples].
 
   * `n` *(number)* - The index of the item that we are currently iterating.
 
-  * `next` *(Function)* - The function invoked in order to iterate to the next item in `array`.
+  * `next` *(Function)* - The function to call to continue to the next item in `array`.
 
-    You can change the value of the current item by passing a new value into the `next` function.
+    You can change the value of the current item by passing a new value into the `next` callback.
 
     `next([newValue])`
 
@@ -140,31 +136,27 @@ shiterate([0, 1, 2], (value, n, next) => {
 
 
 
+### Why "Shiterate"?
+
+Obviously a vulgar fusion of *shit* and *iterate*, it appealed to me because:
+
+  1. It wasn't taken on npm :tada:
+
+  2. It's concise; "iterate" is already in the name.
+
+  3. Although this concept does have a few practical applications, in many cases it's unnecessary and impedes the flow of the program. This might be considered "ugly" or "shitty" when done without purpose.
+
+  4. I don't give a shit
+
+
+
+***
+
+
+
 ### Examples
 
-  1. This is the simplest example; We aren't doing anything a `for` loop couldn't accomplish. However, unlike a `for` loop, we iterate to the next item in given array at our own will, simply by invoking `next()`. If we never call `next()`, we will never iterate to the second item in the array.
-
-      ```js
-      shiterate(['foo', 'bar', 'baz'], (value, n, next) => {
-        console.log('The item is ' + value);
-        return next();
-      });
-      ```
-
-  1. Now, consider the following. Here, we are performing an asynchronous operation within the iteratee. This is was **Shiterate** was meant for; By invoking `next()` within the body of `setTimeout`, we can be sure that we will not iterate to the next item in the array until one second has elapsed. Needless to say, this functionality is not at all possible within a `for` loop.
-
-      ```js
-      shiterate(['foo', 'bar', 'baz'], (value, n, next) => {
-        setTimeout(() => {
-          return next();
-        }, 1000);
-      }, values => {
-        console.log(values);
-        // => ["foo", "bar", "baz"]
-      });
-      ```
-
-  3. In this example, we iterate to the next item after a certain number of seconds equal to the index of the current item. Then, we append an `"-qux"` to the item value. In this case, this example will take three seconds to execute.
+  1. Continue to the next item in the array after the number of seconds elapsed is equal to the index of the current item. We also append `"-qux"` to the item value. This example will take three seconds to finish.
 
       ```js
       shiterate(['foo', 'bar', 'baz'], (value, n, next) => {
@@ -177,28 +169,17 @@ shiterate([0, 1, 2], (value, n, next) => {
       });
       ```
 
-  1. Lastly, we perform some sort of asynchronous operation for each person then we iterate the next person in the given array after changing the value of the previous person to `true`. If the person's name is `"Newman"`, we set the value to `false` and exit the iteratee early using `next.abort()`. In this example, we never make it to `"Kramer"`.
+  2. Square the value of the current item, but abort the iterator if the new value is greater than 25.
 
       ```js
-      let people = ['Jerry', 'Elaine', 'George', 'Newman', 'Kramer'];
-
-      function doSomethingAsynchronous() {
-        return new Promise((resolve, reject) => {
-          // Async code and resolve...
-        });
-      }
-
-      shiterate(people, (value, n, next) => {
-        doSomethingAsynchronous().then(() => {
-          if (value !== 'Newman') {
-            return next(true);
+      shiterate([4, 3, 5, 7, 6], (value, n, next) => {
+        setTimeout(() => {
+          if (value * value <= 25) {
+            return next();
           } else {
-            return next.abort(false);
+            return next.abort();
           }
-        });
-      }, values => {
-        console.log(values);
-        // => [true, true, true, false, "Kramer"]
+        }, 1000);
       });
       ```
 
