@@ -9,7 +9,7 @@
 
 const chai = require('chai');
 
-const shiterate = require('../');
+const shiterate = require('../shiterate');
 
 /**
  * Chai assertion shorthands.
