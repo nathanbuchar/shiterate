@@ -4,11 +4,11 @@ Shiterate [![Build Status](https://travis-ci.org/nathanbuchar/shiterate.svg?bran
 `forEach()` loops that wait.
 
 
-**When should I use it?**
+#### When should I use it?
 
 When you have an array of items that you need to loop through, but for each item in the array you need to perform something asynchronous and you can't continue to the next item in the array until the preceding item has finished. That's when.
 
-**Just use promises. Do you even ES6, bro?**
+#### Just use promises. Do you even ES6, bro?
 
 Promises will get us close! Except with `Promise.all`, all promises run in parallel, not one at a time—that's not what we want. But hey, if that's what you'd rather do, here's some starter code:
 
@@ -22,7 +22,7 @@ Promise.all(myCoolArray.map((val, i) => {
 });
 ```
 
-**No, chain the promises with `.then()`!**
+#### No, chain the promises with `.then()`!
 
 I suppose you could…
 
@@ -37,7 +37,7 @@ doSomething(arr[0])
   });
 ```
 
-**{{some awesome package}} already does this!**
+#### {{some awesome package}} already does this!
 
 Why can't you just be happy for me?
 
