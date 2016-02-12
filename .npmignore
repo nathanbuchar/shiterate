@@ -1,6 +1,11 @@
+src
 test
 
 .editorconfig
 .jscsrc
 .jshintrc
 .travis.yml
+
+*.map
+
+gulpfile.js

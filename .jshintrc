@@ -3,5 +3,15 @@
   "esnext": true,
   "eqeqeq": true,
   "indent": 2,
-  "quotmark": "single"
+  "quotmark": "single",
+  "globals": {
+    "after": false,
+    "afterEach": false,
+    "before": false,
+    "beforeEach": false,
+    "context": false,
+    "describe": false,
+    "it": false,
+    "window": false
+  }
 }
